@@ -1,6 +1,6 @@
 {
     "require": {
-        "luoluolzb/lqf": "^1.0",
+        "luoluolzb/lqf": "^1.1",
         "filp/whoops": "^2.4",
         "nyholm/psr7": "^1.1",
         "luoluolzb/di": "^1.0",
@@ -9,9 +9,19 @@
         "monolog/monolog": "^1.24",
         "zendframework/zend-diactoros": "^2.1"
     },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.4",
+        "phpstan/phpstan": "^0.11.12",
+        "filp/whoops": "^2.4"
+    },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "src/"
         }
+    },
+    "scripts": {
+        "phpcs": "vendor\\bin\\phpcs -sw --standard=PSR2 --colors src",
+        "phpcbf": "vendor\\bin\\phpcbf -sw --standard=PSR2 --colors src",
+        "phpstan": "vendor\\bin\\phpstan analyse --level 7 src"
     }
 }

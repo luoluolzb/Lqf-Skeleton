@@ -25,7 +25,8 @@ use Whoops\Handler\CallbackHandler;
     $app = AppFactory::getInstance();
 
     // 加载应用配置
-    $app->getConfig()->loadAndMerge(__DIR__ . '/../app/config.php');
+    $srcPath = __DIR__ . '/../src/';
+    $app->getConfig()->loadAndMerge($srcPath . 'config.php');
 
     // 注册错误处理，框架不接管
     $whoops = new Whoops;
@@ -34,24 +35,23 @@ use Whoops\Handler\CallbackHandler;
     } else {  // 生产模式
         // 应该添加 Whoops\Handler\CallbackHandler
         // 注入自定义的处理器：如写入错误信息到日志或发送邮件等
-        $callbackHandler = new CallbackHandler(function ($exception, $inspector, $run) {
-            error_log($exception->getMessage());
-        });
+        $callbackHandler = new CallbackHandler(
+            function ($exception, $inspector, $run) {
+                error_log($exception->getMessage());
+            }
+        );
         $whoops->appendHandler($callbackHandler);
     }
     $whoops->register();
 
-    // 注入应用依赖
-    $dependency = require __DIR__ . '/../app/dependency.php';
-    $dependency($app);
+    // 注入依赖
+    (require($srcPath . 'dependency.php'))($app);
 
     // 注册路由
-    $route =  require __DIR__ . '/../app/route.php';
-    $route($app);
+    (require($srcPath . 'route.php'))($app);
 
     // 注册中间件
-    $middleware = require __DIR__ . '/../app/middleware.php';
-    $middleware($app);
+    (require($srcPath . 'middleware.php'))($app);
             
     // 启动应用
     $app->start();
